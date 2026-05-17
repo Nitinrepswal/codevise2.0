@@ -1,1 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodeVise — AI Code Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
 
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
+  <div class="bg-orb orb3"></div>
+  <div class="bg-grid"></div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="2" y="2" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.25"/>
+        <rect x="11" y="2" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.25"/>
+        <rect x="2" y="11" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.25"/>
+        <rect x="11" y="11" width="7" height="7" rx="1.5" fill="currentColor"/>
+      </svg>
+      <span class="logo-name">Code<span class="logo-hi">Vise</span></span>
+    </div>
+    <div class="nav-pills">
+      <button class="nav-pill active" id="nav-analyze" onclick="switchMode('analyze')">Analyzer</button>
+      <button class="nav-pill" id="nav-convert" onclick="switchMode('convert')">🔄 Converter</button>
+    </div>
+    <div class="nav-right">
+      <span class="online-dot"></span>
+      <span class="online-txt">Live</span>
+    </div>
+  </nav>
+
+  <!-- ═══════════ ANALYZER ═══════════ -->
+  <div id="mode-analyze">
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <span class="ey-bar"></span><span class="ey-txt">AI Code Intelligence</span><span class="ey-bar"></span>
+      </div>
+      <h1 class="hero-h1">Write better code.<br/><span class="hero-grad">Know exactly why.</span></h1>
+      <p class="hero-p">Drop any code — get a score, line-by-line breakdown, errors, fixes and complexity instantly.</p>
+      <a href="#analyzer" class="hero-btn">
+        Start Analyzing
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5L8.5 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="hero-stats">
+        <div class="hs"><span class="hs-n">10</span><span class="hs-l">Point Score</span></div>
+        <div class="hs-div"></div>
+        <div class="hs"><span class="hs-n">10+</span><span class="hs-l">Languages</span></div>
+        <div class="hs-div"></div>
+        <div class="hs"><span class="hs-n">AI</span><span class="hs-l">Line Analysis</span></div>
+        <div class="hs-div"></div>
+        <div class="hs"><span class="hs-n">🔄</span><span class="hs-l">Converter</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="analyzer">
+      <div class="wrap">
+        <!-- Editor -->
+        <div class="code-card" id="analyze-editor-card">
+          <div class="code-card-bar">
+            <div class="mac-dots"><span class="mdot dr"></span><span class="mdot dy"></span><span class="mdot dg"></span></div>
+            <span class="code-card-title">untitled.code</span>
+            <div class="bar-right">
+              <select id="lang-select" class="sel">
+                <option value="auto">⚡ Auto Detect</option>
+                <option value="Python">Python</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="Java">Java</option>
+                <option value="C++">C++</option>
+                <option value="C">C</option>
+                <option value="TypeScript">TypeScript</option>
+                <option value="Go">Go</option>
+                <option value="Rust">Rust</option>
+                <option value="PHP">PHP</option>
+                <option value="Swift">Swift</option>
+              </select>
+              <span class="det-badge" id="detected-lang"></span>
+            </div>
+          </div>
+          <div class="editor-area">
+            <div class="lnums" id="line-numbers">1</div>
+            <textarea class="code-ta" id="code-input" spellcheck="false" placeholder="# Paste your code here..."></textarea>
+          </div>
+          <div class="code-card-foot">
+            <span class="foot-meta" id="char-count">0 lines · 0 chars</span>
+            <div class="foot-btns">
+              <button class="sm-btn" id="example-btn">⚡ Example</button>
+              <button class="sm-btn" id="clear-btn">✕ Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-dock">
+          <div class="action-dock-head">
+            <div class="action-copy">
+              <div class="action-kicker">Review flow</div>
+              <p class="action-text">Analyze fresh code, reopen full saved reports, or export the latest result in one place.</p>
+            </div>
+            <div class="btn-row">
+              <button class="primary-btn" id="analyze-btn">
+                <span class="btn-ico"><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="8.5" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M6.5 5.5l5 3-5 3v-6z" fill="currentColor"/></svg></span>
+                <span class="btn-lbl">Analyze Code</span>
+                <span class="btn-spin" id="a-spinner"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="extra-btns" id="extra-btns">
+            <button class="xbtn xbtn-interview" id="interview-btn" onclick="openInterviewModal()">
+              🎯 Interview Mode
+            </button>
+            <button class="xbtn xbtn-history" onclick="openHistoryModal()">
+              📈 History <span class="hbadge" id="history-count">0</span>
+            </button>
+            <button class="xbtn xbtn-pdf" onclick="exportPDF()">
+              📄 Export PDF
+            </button>
+          </div>
+
+          <!-- Keyboard shortcut hint -->
+          <div id="kb-hint" class="kb-hint"></div>
+        </div>
+
+        <div class="err-bar" id="error-bar"></div>
+
+        <!-- Results -->
+        <div id="results" class="hidden">
+          <!-- Score Card -->
+          <div class="score-card">
+            <div class="score-ring-col">
+              <div class="ring-wrap">
+                <svg viewBox="0 0 140 140" class="ring-svg">
+                  <defs>
+                    <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#5b7fff"/>
+                      <stop offset="100%" stop-color="#2dd4bf"/>
+                    </linearGradient>
+                  </defs>
+                  <circle class="ring-track" cx="70" cy="70" r="54"/>
+                  <circle class="ring-fill" id="score-prog" cx="70" cy="70" r="54"/>
+                </svg>
+                <div class="ring-label">
+                  <span class="ring-num" id="big-score">0</span>
+                  <span class="ring-den">/10</span>
+                </div>
+              </div>
+              <div class="verdict" id="score-verdict">—</div>
+            </div>
+            <div class="score-metrics-col">
+              <div class="metrics-title">Quality Breakdown</div>
+              <div class="metrics-grid" id="breakdown-grid"></div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="tabs">
+            <button class="tab active" data-tab="lines">📋 Lines</button>
+            <button class="tab" data-tab="errors">🐛 Errors</button>
+            <button class="tab" data-tab="suggestions">💡 Tips</button>
+            <button class="tab" data-tab="fixed">✅ Fixed Code</button>
+            <button class="tab" data-tab="complexity">📊 Complexity</button>
+            <button class="tab" data-tab="summary">📝 Summary</button>
+          </div>
+
+          <div class="tab-panel active" id="tab-lines"><div id="lines-table"></div></div>
+          <div class="tab-panel" id="tab-errors"><div id="errors-list"></div></div>
+          <div class="tab-panel" id="tab-suggestions"><div class="sug-grid" id="sug-grid"></div></div>
+          <div class="tab-panel" id="tab-fixed">
+            <div class="code-card">
+              <div class="code-card-bar">
+                <div class="mac-dots"><span class="mdot dr"></span><span class="mdot dy"></span><span class="mdot dg"></span></div>
+                <span class="code-card-title" style="color:var(--cyan)">corrected.code</span>
+                <button class="ghost-btn" id="copy-fixed-btn">Copy</button>
+              </div>
+              <div class="editor-area" style="max-height:440px;overflow-y:auto;">
+                <div class="lnums" id="fixed-lnums">1</div>
+                <pre class="out-pre" id="fixed-code"></pre>
+              </div>
+              <div id="fixed-changes"></div>
+            </div>
+          </div>
+          <div class="tab-panel" id="tab-complexity"><div id="complexity-card"></div></div>
+          <div class="tab-panel" id="tab-summary"><div class="summary-card" id="summary-card"></div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══════════ CONVERTER ═══════════ -->
+  <div id="mode-convert" class="hidden">
+    <section class="conv-hero">
+      <div class="hero-eyebrow">
+        <span class="ey-bar"></span><span class="ey-txt">Code Converter</span><span class="ey-bar"></span>
+      </div>
+      <h1 class="hero-h1">Convert between<br/><span class="hero-grad">any language instantly.</span></h1>
+      <p class="hero-p">Paste code, pick the target language — AI rewrites it cleanly.</p>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+
+        <!-- Lang bar -->
+        <div class="conv-bar">
+          <div class="conv-bar-side">
+            <span class="conv-bar-label">From</span>
+            <select id="conv-from" class="sel sel-lg">
+              <option value="auto">⚡ Auto Detect</option>
+              <option value="Python">Python</option>
+              <option value="JavaScript">JavaScript</option>
+              <option value="Java">Java</option>
+              <option value="C++">C++</option>
+              <option value="C">C</option>
+              <option value="TypeScript">TypeScript</option>
+              <option value="Go">Go</option>
+              <option value="Rust">Rust</option>
+              <option value="PHP">PHP</option>
+              <option value="Swift">Swift</option>
+            </select>
+          </div>
+          <div class="conv-bar-arrow">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M5 15h20M17 8l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="conv-bar-side">
+            <span class="conv-bar-label">To</span>
+            <select id="conv-to" class="sel sel-lg">
+              <option value="JavaScript">JavaScript</option>
+              <option value="Python">Python</option>
+              <option value="Java">Java</option>
+              <option value="C++">C++</option>
+              <option value="C">C</option>
+              <option value="TypeScript">TypeScript</option>
+              <option value="Go">Go</option>
+              <option value="Rust">Rust</option>
+              <option value="PHP">PHP</option>
+              <option value="Swift">Swift</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Two editors -->
+        <div class="conv-editors">
+
+          <!-- Input -->
+          <div class="conv-col">
+            <div class="conv-col-header">
+              <span class="conv-col-title" id="conv-from-label">Input Code</span>
+              <div class="foot-btns">
+                <button class="sm-btn" id="conv-example-btn">⚡ Example</button>
+                <button class="sm-btn" id="conv-clear-btn">✕ Clear</button>
+              </div>
+            </div>
+            <div class="code-card conv-code-card">
+              <div class="editor-area conv-editor-area">
+                <div class="lnums" id="conv-in-lnums">1</div>
+                <textarea class="code-ta" id="conv-input" spellcheck="false" placeholder="# Paste your code here..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Output -->
+          <div class="conv-col">
+            <div class="conv-col-header">
+              <span class="conv-col-title" id="conv-to-label">Converted Code</span>
+              <button class="ghost-btn" id="copy-conv-btn" style="display:none">Copy</button>
+            </div>
+            <div class="code-card conv-code-card">
+              <div class="editor-area conv-editor-area" id="conv-out-area">
+                <!-- Placeholder -->
+                <div class="conv-ph" id="conv-ph">
+                  <span class="conv-ph-icon">🔄</span>
+                  <span class="conv-ph-txt">Converted code appears here</span>
+                </div>
+                <!-- Output (hidden until converted) -->
+                <div class="lnums" id="conv-out-lnums" style="display:none">1</div>
+                <pre class="out-pre" id="conv-output" style="display:none"></pre>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Convert button -->
+        <div class="btn-row">
+          <button class="primary-btn green-btn" id="convert-btn">
+            <span class="btn-ico">🔄</span>
+            <span class="btn-lbl">Convert Code</span>
+            <span class="btn-spin" id="c-spinner"></span>
+          </button>
+        </div>
+
+        <div class="err-bar" id="conv-err-bar"></div>
+
+        <!-- Notes -->
+        <div id="conv-notes-wrap" class="hidden">
+          <div class="notes-card" id="conv-notes-card"></div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- HISTORY MODAL -->
+  <div id="history-modal" class="modal-overlay hidden" onclick="if(event.target===this)closeHistoryModal()">
+    <div class="modal-box modal-box-history">
+      <div class="modal-header">
+        <div class="modal-title">📈 Analysis History</div>
+        <div class="modal-actions">
+          <button class="xbtn" onclick="clearHistory()">🗑 Clear</button>
+          <button class="modal-close" onclick="closeHistoryModal()">✕</button>
+        </div>
+      </div>
+      <div class="hchart-wrap">
+        <div class="hchart-head">
+          <div>
+            <div class="hchart-label">Score Progress</div>
+            <div class="hchart-sub">Click any score card to open the full saved analysis.</div>
+          </div>
+          <div class="hchart-summary" id="history-summary">Loading history...</div>
+        </div>
+        <div class="hchart" id="history-chart"></div>
+      </div>
+      <div class="history-layout">
+        <div class="history-rail">
+          <div class="history-rail-title">Recent Runs</div>
+          <div id="history-list" class="history-list"></div>
+        </div>
+        <div class="history-detail-pane">
+          <div id="history-detail" class="history-detail"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERVIEW MODAL -->
+  <div id="interview-modal" class="modal-overlay hidden" onclick="if(event.target===this)closeInterviewModal()">
+    <div class="modal-box modal-box-wide">
+      <div class="modal-header">
+        <div class="modal-title">🎯 Interview Mode — Google / Amazon / Microsoft</div>
+        <button class="modal-close" onclick="closeInterviewModal()">✕</button>
+      </div>
+      <div id="interview-content" class="interview-content">
+        <div class="interview-loading"><div class="iv-spinner"></div><div>Evaluating...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
